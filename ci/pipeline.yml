@@ -7,12 +7,12 @@ groups:
 
 resource_types:
 - name: bbl-state-resource
-  type: docker-image
+  type: registry-image
   source:
     repository: cfinfrastructure/bbl-state-resource
 
 - name: bosh-release-resource
-  type: docker-image
+  type: registry-image
   source:
     repository: dpb587/bosh-release-resource
 
@@ -62,7 +62,7 @@ resources:
 jobs:
 - name: os-conf-release-acceptance-tests
   plan:
-  - aggregate:
+  - in_parallel:
     - get: os-conf-release
       trigger: true
     - get: ubuntu-trusty-stemcell
@@ -95,7 +95,7 @@ jobs:
 
 - name: finalize-release
   plan:
-    - aggregate:
+    - in_parallel:
       - get: os-conf-release
         passed: [os-conf-release-acceptance-tests]
       - get: os-conf-version
